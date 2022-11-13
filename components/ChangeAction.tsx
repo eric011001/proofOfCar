@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 import contractABI from '../json/abi.json'
 
-const ChangeAction = ({address}) => {
+const ChangeAction = ({address}:any) => {
 
     const [contract, setContract] = useState(null);
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
@@ -12,7 +12,7 @@ const ChangeAction = ({address}) => {
     useEffect(() => {
         const myContract:any = new web3.eth.Contract(
             contractABI,
-            "0x2bEC6b327839E1023860e05CcE64f0feE65078eB"
+            "0xb8DD8A56b17d2896817F00d72190E57bb3c31a19"
         );
         setContract(myContract)
     }, [])

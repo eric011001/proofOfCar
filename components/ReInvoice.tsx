@@ -4,7 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 import contractABI from '../json/abi.json'
-const ReInvoiceAction = ({address}) => {
+const ReInvoiceAction = ({address}:any) => {
     
     const [methods, setMethods] = useState({ value: 'CREDIT', label: 'Credit' })
     const [year, setYear] = useState({ value: '2023', label: '2023'})
