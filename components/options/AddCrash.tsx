@@ -2,13 +2,13 @@ import React,{ useState, useEffect } from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
-import contractABI from '../../json/abi.json'
+const contractABI =  require('../../json/abi.json');
 
 
 
 const AddCrash = ({address}:any) => {
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
-    const [contract, setContract] = useState(null);
+    const [contract, setContract] = useState<any>(null);
 
     useEffect(() => {
         const myContract:any = new web3.eth.Contract(
@@ -35,10 +35,13 @@ const AddCrash = ({address}:any) => {
             const {idInput,nameInsurerInput,accidentDescriptionInput,damageCostInput} = valores;
             
             try {
-                contract.methods.addAccident(parseInt(idInput),nameInsurerInput,accidentDescriptionInput,parseInt(damageCostInput)).send({from:address}).then(ex => {
-                    console.log(ex);
-                    
-                });
+                if(contract){
+                    contract.methods.addAccident(parseInt(idInput),nameInsurerInput,accidentDescriptionInput,parseInt(damageCostInput)).send({from:address}).then((ex:any) => {
+                        console.log(ex);
+                        
+                    }).catch((err:any) => console.log(err));
+                }
+                
             } catch (error) {
                 console.log(error);
                 

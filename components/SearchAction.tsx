@@ -3,12 +3,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import InvoiceInfo from './InvoiceInfo';
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
-import contractABI from '../json/abi.json'
+const contractABI = require('../json/abi.json');
 
-const SearchAction = () => {
+const SearchAction = ({address}:any) => {
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     const [search, setSearch] = useState(false)
-    const [contract, setContract] = useState(null);
+    const [contract, setContract] = useState<any>(null);
     const [invoice, setInvoice] = useState({})
     const [reparations, setReparations] = useState({})
     useEffect(() => {
@@ -28,10 +28,10 @@ const SearchAction = () => {
         }),
         onSubmit: async valores => {
             const {valueToSearchInput} = valores;
-            await contract.methods.readFactura(parseInt(valueToSearchInput)).call().then(async cosa => {
+            await contract.methods.readFactura(parseInt(valueToSearchInput)).call().then(async (cosa:any) => {
                 console.log(cosa);
                 setInvoice(cosa)
-                await contract.methods.readReparaciones(parseInt(valueToSearchInput)).call().then(item => {
+                await contract.methods.readReparaciones(parseInt(valueToSearchInput)).call().then((item:any) => {
                     setReparations(item)
                     console.log('cosas');
                     

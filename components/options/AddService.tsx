@@ -3,12 +3,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { servicesVersion } from 'typescript';
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
-import contractABI from '../../json/abi.json'
+const contractABI =  require('../../json/abi.json');
 
 
-const AddService = ({address}) => {
+const AddService = ({address}:any) => {
 
-    const [contract, setContract] = useState(null);
+    const [contract, setContract] = useState<any>(null);
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
 
     useEffect(() => {
@@ -36,10 +36,10 @@ const AddService = ({address}) => {
         onSubmit: async valores => {
             const {idInput, workShopNameInput, entranceDateInput, exitDateInput, descriptionService} = valores;
             try {
-                contract.methods.addService(parseInt(idInput),workShopNameInput,entranceDateInput,exitDateInput,descriptionService).send({from:address}).then(ex => {
+                contract.methods.addService(parseInt(idInput),workShopNameInput,entranceDateInput,exitDateInput,descriptionService).send({from:address}).then((ex:any) => {
                     console.log(ex);
                     
-                });
+                }).catch((err:any) => console.log(err));
             } catch (error) {
                 console.log(error);
                 

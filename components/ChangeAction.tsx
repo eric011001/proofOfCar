@@ -6,7 +6,7 @@ const contractABI = require('../json/abi.json');
 
 const ChangeAction = ({address}:any) => {
 
-    const [contract, setContract] = useState(null);
+    const [contract, setContract] = useState<any>(null);
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     
     useEffect(() => {
@@ -36,10 +36,12 @@ const ChangeAction = ({address}:any) => {
             const {idInput, nameInput, curpInput, rfcInput} = valores
             
             try {
-                contract.methods.createInsurance(parseInt(idInput),nameInput, rfcInput, curpInput).send({from:address}).then(ex => {
-                    //console.log('si se pudeo');
-                    
-                });
+                if(contract){
+                    contract.methods.createInsurance(parseInt(idInput),nameInput, rfcInput, curpInput).send({from:address}).then((ex:any) => {
+                        
+                    }).catch((err:any) => console.log(err));
+                }
+                
             } catch (error) {
                 console.log(error);
                 
