@@ -1,7 +1,8 @@
 import React from 'react'
 
 const InvoiceInfo = ({invoice, accidents, services}:any) => {
-
+    console.log(accidents);
+    
     
     
 
@@ -52,7 +53,7 @@ const InvoiceInfo = ({invoice, accidents, services}:any) => {
             <div className='lg:flex'>
                 <div className='w-1/2'>
                     <h3 className='text-center text-2xl font-extrabold'>Last accident</h3>
-                    {accidents.insurer  ? (
+                    {services.exitDate  ? (
                         <div className=' w-full shadow-lg rounded-lg w-max px-12 py-5 mr-5 bg-white '>
                             <p className='font-bold'>Name of insurer: <span className='font-normal'>{accidents.insurer}</span></p>
                             <p className='font-bold'>Accident description: <span className='font-normal'>{accidents.accidentDescription}</span></p>
@@ -65,7 +66,7 @@ const InvoiceInfo = ({invoice, accidents, services}:any) => {
                 </div>
                 <div className="w-1/2">
                 <h3 className='text-center text-2xl font-extrabold'>Last service</h3>
-            {services.exitDate  ? (
+            {accidents.insurer  ? (
                 <div className='shadow-lg  rounded-lg w-max px-12 py-5 mr-5 bg-white '>
                     <p className='font-bold'>Workshop Name: <span className='font-normal'>{services.workShop}</span></p>
                     <p className='font-bold'>Entrance day: <span className='font-normal'>{services.entranceDate}</span></p>

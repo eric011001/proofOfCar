@@ -36,10 +36,11 @@ const ChangeAction = ({address}:any) => {
         }),
         onSubmit: async valores => {
             const {idInput, nameInput, curpInput, rfcInput} = valores
-            
             try {
                 if(contract){
                     contract.methods.changeOwner(parseInt(idInput),nameInput, rfcInput, curpInput).send({from:address}).then((ex:any) => {
+                        console.log(ex);
+                        
                         Swal.fire({
                             icon: 'success',
                             title: 'Updated',
@@ -58,6 +59,16 @@ const ChangeAction = ({address}:any) => {
         }
     });
 
+    if(address == ''){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'It seems like you do not have an active wallet!'
+        }).then((ex:any) => {
+            router.reload();
+        });
+    }
+
     return(
         <div>
             <aside className="lg:w-full xl:w-full md:w-full" aria-label="Sidebar">
@@ -74,6 +85,7 @@ const ChangeAction = ({address}:any) => {
                     </ul>
                 </div>
             </aside>
+            <form onSubmit={formikInvoice.handleSubmit}>
             <div className='mr-2 w-full'>
                     <h3 className='text-center text-2xl font-extrabold'>Owner</h3>
                 </div>
@@ -120,6 +132,7 @@ const ChangeAction = ({address}:any) => {
                 <div className="flex flex-wrap justify-center">
                     <button type="submit" className="m-2 block h-10 w-1/3 sm:w-full md:w-1/3 lg:w-1/3 xl:w-1/3 h-10 bg-red-600 hover:bg-red-700 rounded-xl text-white font-semibold transition-all">Change invoice</button>
                 </div>
+            </form>
         </div>
     )
 }

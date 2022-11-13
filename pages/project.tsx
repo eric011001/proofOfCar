@@ -7,7 +7,10 @@ import SearchAction from '../components/SearchAction';
 
 const Project = ({address}:any) => {
     
-    const [action, setAction] = useState('ADD')
+    const [action, setAction] = useState('SEARCH')
+
+    
+
 
     return(
         <div className='h-screen'>

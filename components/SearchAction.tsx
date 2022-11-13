@@ -31,8 +31,9 @@ const SearchAction = ({address}:any) => {
         onSubmit: async valores => {
             const {valueToSearchInput} = valores;
             await contract.methods.readFactura(parseInt(valueToSearchInput)).call().then(async (cosa:any) => {
+                setInvoice(cosa)
                 await contract.methods.readReparaciones(parseInt(valueToSearchInput)).call().then((item:any) => {
-                    console.log(item);
+                    
                     
                     setReparation({workShop: item[0],
                         entranceDate: item[1],
@@ -125,7 +126,7 @@ const SearchAction = ({address}:any) => {
                     
                 </form>
             </div>
-            {search ? <InvoiceInfo invoice ={invoice} accidents={reparation} services = {crash}/> : ''}
+            {search ? <InvoiceInfo invoice ={invoice} accidents={crash} services = {reparation}/> : ''}
             
         </div>
     )

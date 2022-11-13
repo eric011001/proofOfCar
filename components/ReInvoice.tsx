@@ -54,6 +54,7 @@ const ReInvoiceAction = ({address}:any) => {
             
         }),
         onSubmit: async valores => {
+        
             const {idInput,methodInput, serialNumberInput ,modelInput ,yearOfVehicleInput,colorInput, carBrandInput,engineInput, litersInput} = valores
             
             try {
@@ -136,6 +137,16 @@ const ReInvoiceAction = ({address}:any) => {
             borderRadius: '0.75em'
         })
     };
+
+    if(address == ''){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'It seems like you do not have an active wallet!'
+        }).then((ex:any) => {
+            router.reload();
+        });
+    }
 
     return (
         <div className='p-5 w-full'>

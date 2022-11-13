@@ -151,6 +151,16 @@ const AddInvoice = ({address}:any) => {
         })
     };
 
+    if(address == ''){
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'It seems like you do not have an active wallet!'
+        }).then((ex:any) => {
+            router.reload();
+        });
+    }
+
     return (
         <div className='p-5 w-full'>
             <form onSubmit={formikInvoice.handleSubmit}>
