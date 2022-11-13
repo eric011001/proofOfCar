@@ -1,11 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import InvoiceInfo from './InvoiceInfo';
+import { createAlchemyWeb3 } from "@alch/alchemy-web3"
+import contractABI from '../json/abi.json'
 
 const SearchAction = () => {
-
+    const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     const [search, setSearch] = useState(false)
+    const [contract, setContract] = useState(null);
+    const [invoice, setInvoice] = useState({})
+    const [reparations, setReparations] = useState({})
+    useEffect(() => {
+        const myContract:any = new web3.eth.Contract(
+            contractABI,
+            "0xb8DD8A56b17d2896817F00d72190E57bb3c31a19"
+        );
+        setContract(myContract)
+    }, [])
 
     const formikSearch = useFormik({
         initialValues: {
@@ -15,7 +27,18 @@ const SearchAction = () => {
             valueToSearchInput: Yup.string().required('')
         }),
         onSubmit: async valores => {
-            console.log(valores);
+            const {valueToSearchInput} = valores;
+            await contract.methods.readFactura(parseInt(valueToSearchInput)).call().then(async cosa => {
+                console.log(cosa);
+                setInvoice(cosa)
+                await contract.methods.readReparaciones(parseInt(valueToSearchInput)).call().then(item => {
+                    setReparations(item)
+                    console.log('cosas');
+                    
+                    console.log(item);
+                    
+                });
+            });
             
             setSearch(true)
             
@@ -93,7 +116,7 @@ const SearchAction = () => {
                     
                 </form>
             </div>
-            {search ? <InvoiceInfo invoice ={invoiceTest}/> : ''}
+            {search ? <InvoiceInfo invoice ={invoice} accidents={invoiceTest.accidents} services = {invoiceTest.services}/> : ''}
             
         </div>
     )

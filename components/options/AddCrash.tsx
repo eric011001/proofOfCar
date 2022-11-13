@@ -1,25 +1,48 @@
-import React from 'react'
+import React,{ useState, useEffect } from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { createAlchemyWeb3 } from "@alch/alchemy-web3"
+import contractABI from '../../json/abi.json'
 
 
 
-const AddCrash = () => {
+const AddCrash = ({address}:any) => {
+    const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
+    const [contract, setContract] = useState(null);
 
+    useEffect(() => {
+        const myContract:any = new web3.eth.Contract(
+            contractABI,
+            "0xb8DD8A56b17d2896817F00d72190E57bb3c31a19"
+        );
+        setContract(myContract)
+    }, [])
+    
     const formikCrash = useFormik({
         initialValues: {
+            idInput: '',
             nameInsurerInput: '',
             accidentDescriptionInput: '',
             damageCostInput: ''
         },validationSchema: Yup.object({
+            idInput: Yup.string().required('Required field'),
             nameInsurerInput: Yup.string().required('Required field'),
             accidentDescriptionInput: Yup.string().required('Required field'),
             damageCostInput: Yup.string().required('The damage cost is not right')
     
         }),
         onSubmit: async valores => {
-            console.log(valores);
+            const {idInput,nameInsurerInput,accidentDescriptionInput,damageCostInput} = valores;
             
+            try {
+                contract.methods.addAccident(parseInt(idInput),nameInsurerInput,accidentDescriptionInput,parseInt(damageCostInput)).send({from:address}).then(ex => {
+                    console.log(ex);
+                    
+                });
+            } catch (error) {
+                console.log(error);
+                
+            }
         }
     })
 
@@ -30,7 +53,14 @@ const AddCrash = () => {
                     <h3 className='text-center text-2xl font-extrabold'>Crash</h3>
                 </div>
                 <div className='xl:flex lg:flex'>
-                    <div className='mr-2 lg:w-3/5 md:w-full'>
+                    <div className='mr-2 lg:w-1/5 md:w-full'>
+                        <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="idInput">Id of Vehicle:</label>
+                        <input  id="idInput" name="idInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikCrash.handleChange} onBlur={formikCrash.handleBlur} value={formikCrash.values.idInput}/>
+                        {formikCrash.touched.idInput && formikCrash.errors.idInput ? (
+                            <span className=" justify-center flex text-red-500">{formikCrash.errors.idInput}</span>
+                        ): null}
+                    </div>
+                    <div className='mr-2 lg:w-2/5 md:w-full'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="nameInsurerInput">Name of insurer:</label>
                         <input  id="nameInsurerInput" name="nameInsurerInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikCrash.handleChange} onBlur={formikCrash.handleBlur} value={formikCrash.values.nameInsurerInput}/>
                         {formikCrash.touched.nameInsurerInput && formikCrash.errors.nameInsurerInput ? (

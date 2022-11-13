@@ -2,11 +2,23 @@ import React, { useState } from 'react'
 import Select from "react-select";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-
-const ReInvoiceAction = () => {
+import { createAlchemyWeb3 } from "@alch/alchemy-web3"
+import contractABI from '../json/abi.json'
+const ReInvoiceAction = ({address}) => {
+    
     const [methods, setMethods] = useState({ value: 'CREDIT', label: 'Credit' })
     const [year, setYear] = useState({ value: '2023', label: '2023'})
     const [engine, setEngine] = useState({ value: '4cil', label: '4 cil.' })
+    const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
+    const [contract, setContract] = useState(null);
+
+    useEffect(() => {
+        const myContract:any = new web3.eth.Contract(
+            contractABI,
+            "0xb8DD8A56b17d2896817F00d72190E57bb3c31a19"
+        );
+        setContract(myContract)
+    }, [])
     
     const methodsOptions = [
         { value: 'CREDIT', label: 'Credit' },
@@ -15,6 +27,7 @@ const ReInvoiceAction = () => {
 
     const formikInvoice = useFormik({
         initialValues: {
+            idInput: '',
             methodInput: 'CREDIT',
             serialNumberInput: '',
             modelInput: '',
@@ -25,6 +38,7 @@ const ReInvoiceAction = () => {
             litersInput: ''
         },
         validationSchema: Yup.object({
+            idInput: Yup.string().required('Required field'),
             methodInput: Yup.string().required('Required field'),
             serialNumberInput: Yup.string().required('Required field'),
             modelInput: Yup.string().required('Required field'),
@@ -37,7 +51,17 @@ const ReInvoiceAction = () => {
             
         }),
         onSubmit: async valores => {
-            console.log(valores);
+            const {idInput,methodInput, serialNumberInput ,modelInput ,yearOfVehicleInput,colorInput, carBrandInput,engineInput, litersInput} = valores
+            
+            try {
+                contract.methods.createInsurance(parseInt(idInput),methodInput,serialNumberInput,modelInput,yearOfVehicleInput,colorInput,carBrandInput,engineInput,litersInput).send({from:address}).then(ex => {
+                    //console.log('si se pudeo');
+                    
+                });
+            } catch (error) {
+                console.log(error);
+                
+            }
             
         }
     });
@@ -124,6 +148,13 @@ const ReInvoiceAction = () => {
                     <h3 className='text-center text-2xl font-extrabold'>Car</h3>
                 </div>
                 <div className='xl:flex lg:flex'>
+                    <div className='mr-2 lg:w-1/5 md:w-full'>
+                        <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="idInput">Id of Vehicle:</label>
+                        <input  id="idInput" name="idInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikInvoice.handleChange} onBlur={formikInvoice.handleBlur} value={formikInvoice.values.idInput}/>
+                        {formikInvoice.touched.idInput && formikInvoice.errors.idInput ? (
+                            <span className=" justify-center flex text-red-500">{formikInvoice.errors.idInput}</span>
+                        ): null}
+                    </div>
                     <div className='lg:w-1/5 xl:w-1/5 md:w-full'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 truncate ... " htmlFor="methodInpu">Method of payment:</label>
                         <Select id="methodInput" name='methodInput' options={methodsOptions} onChange={(selectedOption:any) => {

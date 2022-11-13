@@ -1,26 +1,49 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { servicesVersion } from 'typescript';
+import { createAlchemyWeb3 } from "@alch/alchemy-web3"
+import contractABI from '../../json/abi.json'
 
 
-const AddService = () => {
+const AddService = ({address}) => {
+
+    const [contract, setContract] = useState(null);
+    const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
+
+    useEffect(() => {
+        const myContract:any = new web3.eth.Contract(
+            contractABI,
+            "0xb8DD8A56b17d2896817F00d72190E57bb3c31a19"
+        );
+        setContract(myContract)
+    }, [])
 
     const formikService = useFormik({
         initialValues: {
+            idInput: '',
             workShopNameInput: '',
             entranceDateInput: '',
             exitDateInput: '',
             descriptionService: ''
         },validationSchema: Yup.object({
+            idInput: Yup.string().required('Required field'),
             workShopNameInput: Yup.string().required('Required field'),
             entranceDateInput: Yup.string().required('The date is not correct'),
             exitDateInput: Yup.string().required('The date is not correct'),
             descriptionService: Yup.string().required('Required field')
         }),
         onSubmit: async valores => {
-            console.log(valores);
-            
+            const {idInput, workShopNameInput, entranceDateInput, exitDateInput, descriptionService} = valores;
+            try {
+                contract.methods.addService(parseInt(idInput),workShopNameInput,entranceDateInput,exitDateInput,descriptionService).send({from:address}).then(ex => {
+                    console.log(ex);
+                    
+                });
+            } catch (error) {
+                console.log(error);
+                
+            }   
         }
     })
 
@@ -31,14 +54,21 @@ const AddService = () => {
                     <h3 className='text-center text-2xl font-extrabold'>Service</h3>
                 </div>
                 <div className='xl:flex lg:flex'>
-                    <div className='mr-2 lg:w-2/4 md:w-full'>
+                    <div className='mr-2 lg:w-1/5 md:w-full'>
+                        <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="idInput">Id of Vehicle:</label>
+                        <input  id="idInput" name="idInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikService.handleChange} onBlur={formikService.handleBlur} value={formikService.values.idInput}/>
+                        {formikService.touched.idInput && formikService.errors.idInput ? (
+                            <span className=" justify-center flex text-red-500">{formikService.errors.idInput}</span>
+                        ): null}
+                    </div>
+                    <div className='mr-2 lg:w-2/5 md:w-full'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="workshopNameInput">Workshop name:</label>
                         <input  id="workShopNameInput" name="workShopNameInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikService.handleChange} onBlur={formikService.handleBlur} value={formikService.values.workShopNameInput}/>
                         {formikService.touched.workShopNameInput && formikService.errors.workShopNameInput ? (
                             <span className=" justify-center flex text-red-500">{formikService.errors.workShopNameInput}</span>
                         ): null}
                     </div>
-                    <div className='mr-2 lg:w-1/4 md:w-full'>
+                    <div className='mr-2 lg:w-2/4 md:w-full'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="entranceDateInput">Date of entrance:</label>
                         <input  id="entranceDateInput" name="entranceDateInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="date"  onChange={formikService.handleChange} onBlur={formikService.handleBlur} value={formikService.values.entranceDateInput}/>
                         {formikService.touched.entranceDateInput && formikService.errors.entranceDateInput ? (

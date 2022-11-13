@@ -3,7 +3,7 @@ import AddCrash from './options/AddCrash';
 import AddInvoice from './options/AddInvoice';
 import AddService from './options/AddService';
 
-const AddAction = () => {
+const AddAction = ({address}:any) => {
     const [option, setOption] = useState('INVOICE');
 
 
@@ -42,7 +42,7 @@ const AddAction = () => {
                     </ul>
                 </div>
             </aside>
-            {option == 'INVOICE' ? <AddInvoice/> : (option === 'CRASH' ? <AddCrash/> : <AddService/>)}
+            {option == 'INVOICE' ? <AddInvoice address={address}/> : (option === 'CRASH' ? <AddCrash address={address}/> : <AddService address={address}/>)}
         </div>
     )
 }

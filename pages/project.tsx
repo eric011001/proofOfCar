@@ -5,8 +5,8 @@ import Menu from '../components/Menu';
 import ReInvoiceAction from '../components/ReInvoice';
 import SearchAction from '../components/SearchAction';
 
-const Project = () => {
-
+const Project = ({address}:any) => {
+    
     const [action, setAction] = useState('ADD')
 
     return(
@@ -28,7 +28,7 @@ const Project = () => {
                     </li>
                 </ul>
                 <div>
-                    {action === 'ADD' ? (<AddAction/>) : (action === 'SEARCH' ? (<SearchAction/>) : (action === 'CHANGE' ? (<ChangeAction/>) : (<ReInvoiceAction/>)))}
+                    {action === 'ADD' ? (<AddAction address={address}/>) : (action === 'SEARCH' ? (<SearchAction address={address}/>) : (action === 'CHANGE' ? (<ChangeAction address={address}/>) : (<ReInvoiceAction address={address}/>)))}
                 </div>
             </div>
             

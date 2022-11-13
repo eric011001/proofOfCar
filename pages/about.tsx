@@ -1,7 +1,465 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Menu from '../components/Menu';
+const Web3 = require('web3');
 
 const About = () => {
+    const [web3, setWeb3] = useState(null)
+    const [address, setAddress] = useState(null)
+    const [contract, setContract] = useState(null)
+    
+    let contractAddress = address  
+
+    let abi = [[
+        {
+            "anonymous": false,
+            "inputs": [
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "postId",
+                    "type": "uint256"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "string",
+                    "name": "actionType",
+                    "type": "string"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "enum Transaction.Deactivated",
+                    "name": "deleted",
+                    "type": "uint8"
+                },
+                {
+                    "indexed": true,
+                    "internalType": "address",
+                    "name": "executor",
+                    "type": "address"
+                },
+                {
+                    "indexed": false,
+                    "internalType": "uint256",
+                    "name": "created",
+                    "type": "uint256"
+                }
+            ],
+            "name": "Action",
+            "type": "event"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "postId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "nameInsurance",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "accidentDescription",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "damageCost",
+                    "type": "uint256"
+                }
+            ],
+            "name": "addAccident",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "postId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "workshopName",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "dateOfEntrance",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "dateOfExit",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "serviceDescription",
+                    "type": "string"
+                }
+            ],
+            "name": "addService",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "postId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "RFC",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "CURP",
+                    "type": "string"
+                }
+            ],
+            "name": "changeOwner",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "string",
+                    "name": "wayOfPayment",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "serialNumber",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "model",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "yearOfVehicle",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "color",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "carBrand",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "engine",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "liters",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "RFC",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "CURP",
+                    "type": "string"
+                }
+            ],
+            "name": "createInsurance",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "postId",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "wayOfPayment",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "serialNumber",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "model",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "yearOfVehicle",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "color",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "carBrand",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "engine",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "liters",
+                    "type": "string"
+                }
+            ],
+            "name": "refacturar",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "activePostCounter",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "name": "authorOf",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "inactivePostCounter",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [],
+            "name": "owner",
+            "outputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "address",
+                    "name": "",
+                    "type": "address"
+                }
+            ],
+            "name": "postsOf",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "readFactura",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "_id",
+                    "type": "uint256"
+                }
+            ],
+            "name": "readReparaciones",
+            "outputs": [
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "string",
+                    "name": "",
+                    "type": "string"
+                }
+            ],
+            "stateMutability": "view",
+            "type": "function"
+        }
+    ]] // Paste your ABI here
+      
+
     return(
         <div className='h-screen'>
             <Menu/>

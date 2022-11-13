@@ -1,15 +1,31 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { createAlchemyWeb3 } from "@alch/alchemy-web3"
+import contractABI from '../json/abi.json'
 
-const ChangeAction = () => {
+const ChangeAction = ({address}) => {
+
+    const [contract, setContract] = useState(null);
+    const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
+    
+    useEffect(() => {
+        const myContract:any = new web3.eth.Contract(
+            contractABI,
+            "0x2bEC6b327839E1023860e05CcE64f0feE65078eB"
+        );
+        setContract(myContract)
+    }, [])
+
     const formikInvoice = useFormik({
         initialValues: {
+            idInput: '',
             nameInput: '',
             curpInput: '',
             rfcInput: ''
         },
         validationSchema: Yup.object({
+            idInput: Yup.string().required('Required field'),
             nameInput: Yup.string().required('Required field'),
             curpInput: Yup.string().required('Required field'),
             rfcInput:  Yup.string().required('Required field'),
@@ -17,7 +33,17 @@ const ChangeAction = () => {
             
         }),
         onSubmit: async valores => {
-            console.log(valores);
+            const {idInput, nameInput, curpInput, rfcInput} = valores
+            
+            try {
+                contract.methods.createInsurance(parseInt(idInput),nameInput, rfcInput, curpInput).send({from:address}).then(ex => {
+                    //console.log('si se pudeo');
+                    
+                });
+            } catch (error) {
+                console.log(error);
+                
+            }
             
         }
     });
@@ -43,7 +69,15 @@ const ChangeAction = () => {
                 </div>
                 <div className='xl:flex lg:flex'>
                     
-                    <div className='w-full mr-2'>
+                    <div className='mr-2 lg:w-1/5 md:w-full'>
+                        <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="idInput">Id of Vehicle:</label>
+                        <input  id="idInput" name="idInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikInvoice.handleChange} onBlur={formikInvoice.handleBlur} value={formikInvoice.values.idInput}/>
+                        {formikInvoice.touched.idInput && formikInvoice.errors.idInput ? (
+                            <span className=" justify-center flex text-red-500">{formikInvoice.errors.idInput}</span>
+                        ): null}
+                    </div>
+
+                    <div className='w-4/5 mr-2'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="name">Full name:</label>
                         <input  id="nameInput" name="nameInput"  className='p-2 m-2 w-full h-10 block bg-gray-200 focus:bg-gray-300 outline-none transition-all rounded-xl'  type="text"  onChange={formikInvoice.handleChange} onBlur={formikInvoice.handleBlur} value={formikInvoice.values.nameInput}/>
                     
