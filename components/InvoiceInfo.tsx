@@ -2,11 +2,7 @@ import React from 'react'
 
 const InvoiceInfo = ({invoice, accidents, services}:any) => {
 
-    console.log(invoice[0]);
     
-    console.log('cosa');
-    
-    console.log(invoice);
     
 
     return(
@@ -53,37 +49,37 @@ const InvoiceInfo = ({invoice, accidents, services}:any) => {
                     <p>CURP: <span className='font-bold'>{invoice[11]}</span></p>
                 </div>
             </div>
-            <h3 className='text-center text-2xl font-extrabold'>Accident history</h3>
-            {accidents.lenght != 0  ? (
-                <div className='flex overflow-x-scroll mb-2'>
-                    {accidents.map((accident:any) => (
-                        <div className='shadow-lg rounded-lg w-max px-12 py-5 mr-5 bg-white '>
-                            <p className='font-bold'>Name of insurer: <span className='font-normal'>{accident.nameInsurance}</span></p>
-                            <p className='font-bold'>Accident description: <span className='font-normal'>{accident.accidentDescription}</span></p>
-                            <p className='font-bold'>Damage cost: <span className='font-normal'>{accident.damageCost}</span></p>
+            <div className='lg:flex'>
+                <div className='w-1/2'>
+                    <h3 className='text-center text-2xl font-extrabold'>Last accident</h3>
+                    {accidents.insurer  ? (
+                        <div className=' w-full shadow-lg rounded-lg w-max px-12 py-5 mr-5 bg-white '>
+                            <p className='font-bold'>Name of insurer: <span className='font-normal'>{accidents.insurer}</span></p>
+                            <p className='font-bold'>Accident description: <span className='font-normal'>{accidents.accidentDescription}</span></p>
+                            <p className='font-bold'>Damage cost: <span className='font-normal'>{accidents.damageCost}</span></p>
                         </div>
-                    ))}
+                    ): 
+                    (
+                        ''
+                    )}
+                </div>
+                <div className="w-1/2">
+                <h3 className='text-center text-2xl font-extrabold'>Last service</h3>
+            {services.exitDate  ? (
+                <div className='shadow-lg  rounded-lg w-max px-12 py-5 mr-5 bg-white '>
+                    <p className='font-bold'>Workshop Name: <span className='font-normal'>{services.workShop}</span></p>
+                    <p className='font-bold'>Entrance day: <span className='font-normal'>{services.entranceDate}</span></p>
+                    <p className='font-bold'>Exit Date: <span className='font-normal'>{services.exitDate}</span></p>
+                    <p className='font-bold'>Service description: <span className='font-normal'>{services.serviceDescription}</span></p>
                 </div>
             ): 
             (
                 ''
             )}
-            <h3 className='text-center text-2xl font-extrabold'>Service history</h3>
-            {services.length != 0  ? (
-                <div className='flex overflow-x-scroll p-2 mt-2 mb-2'>
-                    {services.map((service:any) => (
-                        <div className='shadow-lg  rounded-lg w-max px-12 py-5 mr-5 bg-white '>
-                            <p className='font-bold'>Workshop Name: <span className='font-normal'>{service.nameInsurance}</span></p>
-                            <p className='font-bold'>Entrance day: <span className='font-normal'>{service.accidentDescription}</span></p>
-                            <p className='font-bold'>Exit Date: <span className='font-normal'>{service.damageCost}</span></p>
-                            <p className='font-bold'>Service description: <span className='font-normal'>{service.serviceDescription}</span></p>
-                        </div>
-                    ))}
                 </div>
-            ): 
-            (
-                ''
-            )}
+            </div>
+            
+            
             <div></div>
         </div>
 

@@ -10,7 +10,9 @@ const SearchAction = ({address}:any) => {
     const [search, setSearch] = useState(false)
     const [contract, setContract] = useState<any>(null);
     const [invoice, setInvoice] = useState({})
-    const [reparations, setReparations] = useState({})
+    const [reparation, setReparation] = useState({})
+    const [crash, setCrash] = useState({});
+
     useEffect(() => {
         const myContract:any = new web3.eth.Contract(
             contractABI,
@@ -29,12 +31,19 @@ const SearchAction = ({address}:any) => {
         onSubmit: async valores => {
             const {valueToSearchInput} = valores;
             await contract.methods.readFactura(parseInt(valueToSearchInput)).call().then(async (cosa:any) => {
-                console.log(cosa);
-                setInvoice(cosa)
                 await contract.methods.readReparaciones(parseInt(valueToSearchInput)).call().then((item:any) => {
-                    setReparations(item)
-                    console.log('cosas');
+                    console.log(item);
                     
+                    setReparation({workShop: item[0],
+                        entranceDate: item[1],
+                        exitDate: item[2],
+                        serviceDescription: item[3]
+                    })
+                    setCrash({
+                        insurer: item[4],
+                        accidentDescription: item[5],
+                        damageCost: item[6]
+                    })
                     console.log(item);
                     
                 });
@@ -116,7 +125,7 @@ const SearchAction = ({address}:any) => {
                     
                 </form>
             </div>
-            {search ? <InvoiceInfo invoice ={invoice} accidents={invoiceTest.accidents} services = {invoiceTest.services}/> : ''}
+            {search ? <InvoiceInfo invoice ={invoice} accidents={reparation} services = {crash}/> : ''}
             
         </div>
     )
