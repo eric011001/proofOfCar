@@ -1,4 +1,4 @@
-const TeamMember = ({name,des,img}) => {
+const TeamMember = ({name,des,img}:any) => {
 
     return(
         <div className="mt-5 shadow-lg rounded-lg ml-5 overflow-hidden w-1/5">

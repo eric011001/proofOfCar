@@ -1,6 +1,6 @@
 import React from 'react'
 
-const InvoiceInfo = ({invoice}) => {
+const InvoiceInfo = ({invoice}:any) => {
     const {accidents,carBrand,color,curp,engine,liters,method,model,name,rfc,serialNumber,services,yearOfVehicle} = invoice;
     
 
@@ -52,7 +52,7 @@ const InvoiceInfo = ({invoice}) => {
             <h3 className='text-center text-2xl font-extrabold'>Accident history</h3>
             {accidents.length != 0 ? (
                 <div className='flex overflow-x-scroll mb-2'>
-                    {accidents.map(accident => (
+                    {accidents.map((accident:any) => (
                         <div className='shadow-lg rounded-lg w-max px-12 py-5 mr-5 bg-white '>
                             <p className='font-bold'>Name of insurer: <span className='font-normal'>{accident.nameInsurance}</span></p>
                             <p className='font-bold'>Accident description: <span className='font-normal'>{accident.accidentDescription}</span></p>
@@ -67,7 +67,7 @@ const InvoiceInfo = ({invoice}) => {
             <h3 className='text-center text-2xl font-extrabold'>Service history</h3>
             {accidents.length != 0 ? (
                 <div className='flex overflow-x-scroll p-2 mt-2 mb-2'>
-                    {services.map(service => (
+                    {services.map((service:any) => (
                         <div className='shadow-lg  rounded-lg w-max px-12 py-5 mr-5 bg-white '>
                             <p className='font-bold'>Workshop Name: <span className='font-normal'>{service.nameInsurance}</span></p>
                             <p className='font-bold'>Entrance day: <span className='font-normal'>{service.accidentDescription}</span></p>

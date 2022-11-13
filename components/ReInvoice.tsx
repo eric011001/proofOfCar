@@ -86,18 +86,18 @@ const ReInvoiceAction = () => {
     ];
 
     const selectStyles = {
-        option: (provided, state) => ({
+        option: (provided:any, state:any) => ({
             ...provided,
             backgroundColor: state.isSelected ? '#d1d5db' : '#e5e7eb',
             color: '#212529',
         }),
-        control: (provided, state) => ({
+        control: (provided:any, state:any) => ({
             ...provided,
             borderRadius: '0.75em',
             backgroundColor: state.isFocused ? '#d1d5db' : '#e5e7eb',
             borderWidth: '0px'
         }),
-        menuList: (provided, state) => ({
+        menuList: (provided:any, state:any) => ({
             ...provided,
             borderRadius: '0.75em'
         })
@@ -126,7 +126,7 @@ const ReInvoiceAction = () => {
                 <div className='xl:flex lg:flex'>
                     <div className='lg:w-1/5 xl:w-1/5 md:w-full'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 truncate ... " htmlFor="methodInpu">Method of payment:</label>
-                        <Select id="methodInput" name='methodInput' options={methodsOptions} onChange={selectedOption => {
+                        <Select id="methodInput" name='methodInput' options={methodsOptions} onChange={(selectedOption:any) => {
                             formikInvoice.handleChange('methodInput')(selectedOption.value); 
                             setMethods(selectedOption);}} value={methods} className="m-2" styles={selectStyles}/>
                         {formikInvoice.touched.methodInput && formikInvoice.errors.methodInput ? (
@@ -168,7 +168,7 @@ const ReInvoiceAction = () => {
                     </div>
                     <div className='mr-2 lg:w-1/3 md:w-full'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="yearOfVehicle">Year of vehicle:</label>
-                        <Select id="yearOfVehicleInput" options={yearOptions} onChange={yearOption => {
+                        <Select id="yearOfVehicleInput" options={yearOptions} onChange={(yearOption:any) => {
                             console.log(yearOption);
                             
                             formikInvoice.handleChange('yearOfVehicleInput')(yearOption.value); 
@@ -184,7 +184,7 @@ const ReInvoiceAction = () => {
                     
                     <div className='lg:w-1/3 md:w-full mr-2'>
                         <label className="font-semibold mt-2 mb-2 ml-4 mr-2 " htmlFor="engineInput">Engine:</label>
-                        <Select id="engineInput" options={engineOptions} onChange={engineOption => {
+                        <Select id="engineInput" options={engineOptions} onChange={(engineOption:any) => {
                             console.log(engineOption);
                             
                             formikInvoice.handleChange('engineInput')(engineOption.value); 
