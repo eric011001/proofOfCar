@@ -3,6 +3,8 @@ import Select from "react-select";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 const contractABI =  require('../../json/abi.json');
 
 const AddInvoice = ({address}:any) => {
@@ -11,6 +13,7 @@ const AddInvoice = ({address}:any) => {
     const [year, setYear] = useState({ value: '2023', label: '2023'})
     const [engine, setEngine] = useState({ value: '4cil', label: '4 cil.' })
     const [contract, setContract] = useState<any>(null);
+    const router = useRouter()
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     
     useEffect(() => {
@@ -68,6 +71,13 @@ const AddInvoice = ({address}:any) => {
                 if(contract){
                     contract.methods.createInsurance(methodInput,serialNumberInput,modelInput,yearOfVehicleInput,colorInput,carBrandInput,engineInput,litersInput,nameInput, rfcInput, curpInput).send({from:address}).then((ex:any) => {
                         //console.log('si se pudeo');
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Inserted',
+                            text: 'record was saved successfully!'
+                        }).then((ex:any) => {
+                            router.reload();
+                        })
                         
                     }).catch((err:any) => console.log(err));
                 }

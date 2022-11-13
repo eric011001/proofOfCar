@@ -3,9 +3,11 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 const contractABI = require('../json/abi.json');
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 
 const ChangeAction = ({address}:any) => {
-
+    const router = useRouter()
     const [contract, setContract] = useState<any>(null);
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     
@@ -37,8 +39,14 @@ const ChangeAction = ({address}:any) => {
             
             try {
                 if(contract){
-                    contract.methods.createInsurance(parseInt(idInput),nameInput, rfcInput, curpInput).send({from:address}).then((ex:any) => {
-                        
+                    contract.methods.changeOwner(parseInt(idInput),nameInput, rfcInput, curpInput).send({from:address}).then((ex:any) => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Updated',
+                            text: 'record was updated successfully!'
+                        }).then((ex:any) => {
+                            router.reload();
+                        })
                     }).catch((err:any) => console.log(err));
                 }
                 

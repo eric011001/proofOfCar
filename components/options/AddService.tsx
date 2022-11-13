@@ -4,10 +4,11 @@ import * as Yup from "yup";
 import { servicesVersion } from 'typescript';
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 const contractABI =  require('../../json/abi.json');
-
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 
 const AddService = ({address}:any) => {
-
+    const router = useRouter()
     const [contract, setContract] = useState<any>(null);
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
 
@@ -37,7 +38,13 @@ const AddService = ({address}:any) => {
             const {idInput, workShopNameInput, entranceDateInput, exitDateInput, descriptionService} = valores;
             try {
                 contract.methods.addService(parseInt(idInput),workShopNameInput,entranceDateInput,exitDateInput,descriptionService).send({from:address}).then((ex:any) => {
-                    console.log(ex);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Inserted',
+                        text: 'record was saved successfully!'
+                    }).then((ex:any) => {
+                        router.reload();
+                    })
                     
                 }).catch((err:any) => console.log(err));
             } catch (error) {

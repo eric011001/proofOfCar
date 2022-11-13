@@ -3,12 +3,14 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 const contractABI =  require('../../json/abi.json');
-
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 
 
 const AddCrash = ({address}:any) => {
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     const [contract, setContract] = useState<any>(null);
+    const router = useRouter()
 
     useEffect(() => {
         const myContract:any = new web3.eth.Contract(
@@ -37,7 +39,13 @@ const AddCrash = ({address}:any) => {
             try {
                 if(contract){
                     contract.methods.addAccident(parseInt(idInput),nameInsurerInput,accidentDescriptionInput,parseInt(damageCostInput)).send({from:address}).then((ex:any) => {
-                        console.log(ex);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Inserted',
+                            text: 'record was saved successfully!'
+                        }).then((ex:any) => {
+                            router.reload();
+                        })
                         
                     }).catch((err:any) => console.log(err));
                 }

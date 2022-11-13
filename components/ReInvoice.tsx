@@ -4,6 +4,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
 const contractABI = require('../json/abi.json');
+import Swal from 'sweetalert2';
+import { useRouter } from 'next/router'
 const ReInvoiceAction = ({address}:any) => {
     
     const [methods, setMethods] = useState({ value: 'CREDIT', label: 'Credit' })
@@ -11,6 +13,7 @@ const ReInvoiceAction = ({address}:any) => {
     const [engine, setEngine] = useState({ value: '4cil', label: '4 cil.' })
     const web3 = createAlchemyWeb3('wss://eth-goerli.g.alchemy.com/v2/plh6ykJB50474LfOAh1OS-MwwBpRCorB'); 
     const [contract, setContract] = useState<any>(null);
+    const router = useRouter()
 
     useEffect(() => {
         const myContract:any = new web3.eth.Contract(
@@ -54,8 +57,15 @@ const ReInvoiceAction = ({address}:any) => {
             const {idInput,methodInput, serialNumberInput ,modelInput ,yearOfVehicleInput,colorInput, carBrandInput,engineInput, litersInput} = valores
             
             try {
-                contract.methods.createInsurance(parseInt(idInput),methodInput,serialNumberInput,modelInput,yearOfVehicleInput,colorInput,carBrandInput,engineInput,litersInput).send({from:address}).then((ex:any) => {
+                contract.methods.refacturar(parseInt(idInput),methodInput,serialNumberInput,modelInput,yearOfVehicleInput,colorInput,carBrandInput,engineInput,litersInput).send({from:address}).then((ex:any) => {
                     //console.log('si se pudeo');
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Inserted',
+                        text: 'record was saved successfully!'
+                    }).then((ex:any) => {
+                        router.reload();
+                    })
                     
                 }).catch((err:any)=>console.log(err));
             } catch (error) {
