@@ -2,7 +2,7 @@ import React, {useState, useEffect} from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { createAlchemyWeb3 } from "@alch/alchemy-web3"
-import contractABI from '../json/abi.json'
+const contractABI = require('../json/abi.json');
 
 const ChangeAction = ({address}:any) => {
 
